@@ -1,0 +1,9 @@
+[package]
+name = "emlca"
+version = "0.1.0"
+edition = "2021"
+description = "emlca — fuzzy cellular-automata load diffusion + game-theoretic resource governor (VCG/Shapley/Nash), decisions emitted as .eml"
+
+[dependencies]
+emlcore = { path = "../emlcore" }
+serde_json = "1"

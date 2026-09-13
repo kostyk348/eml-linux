@@ -1,0 +1,6 @@
+# Run the EML-native supervisor under dinit (user or system manager).
+# Install: cp deploy/dinit-emlinit ~/.config/dinit.d/emlinit
+#          dinitctl start emlinit
+type            = process
+command         = /home/lain/eml-linux/target/release/emlinit run --units /home/lain/eml-linux/examples/units --spool /home/lain/.local/state/emlinit/spool
+smooth-recovery = true

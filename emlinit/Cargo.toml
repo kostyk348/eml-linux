@@ -1,0 +1,10 @@
+[package]
+name = "emlinit"
+version = "0.1.0"
+edition = "2021"
+description = "EML-native init/supervisor: units are .eml, log is a hash-chained .eml spool"
+
+[dependencies]
+emlcore = { path = "../emlcore" }
+serde_json = "1"
+libc = "0.2"

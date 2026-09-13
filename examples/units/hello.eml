@@ -1,0 +1,8 @@
+From: <hello@eml.local>
+To: <init@eml.local>
+Subject: hello world service
+X-EML-Type: Application/Service
+X-Entity-ID: hello
+Content-Type: application/json
+
+{"exec":["/bin/sh","-c","echo hello; sleep 30"],"restart":"always","restart_sec":1}

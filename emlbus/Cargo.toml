@@ -1,0 +1,10 @@
+[package]
+name = "emlbus"
+version = "0.1.0"
+edition = "2021"
+description = "emlbus — a publish/subscribe message bus where every message is a .eml file in a spool"
+
+[dependencies]
+emlcore = { path = "../emlcore" }
+serde_json = "1"
+libc = "0.2"

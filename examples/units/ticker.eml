@@ -1,0 +1,8 @@
+From: <ticker@eml.local>
+To: <init@eml.local>
+Subject: ticker depends on hello
+X-EML-Type: Application/Service
+X-Entity-ID: ticker
+Content-Type: application/json
+
+{"exec":["/bin/sh","-c","while true; do echo tick; sleep 5; done"],"restart":"always","restart_sec":1,"after":["hello"]}

@@ -1,0 +1,6 @@
+[workspace]
+resolver = "2"
+members = ["emlcore", "emlinit", "emllog", "emlpkg", "emlca", "emlfs", "emlbus", "emlnet"]
+
+[profile.release]
+opt-level = 3

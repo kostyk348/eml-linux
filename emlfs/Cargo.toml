@@ -1,0 +1,11 @@
+[package]
+name = "emlfs"
+version = "0.1.0"
+edition = "2021"
+description = "emlfs — mount a directory of .eml containers as a read-only filesystem (FUSE)"
+
+[dependencies]
+emlcore = { path = "../emlcore" }
+fuser = "0.14"
+libc = "0.2"
+serde_json = "1"

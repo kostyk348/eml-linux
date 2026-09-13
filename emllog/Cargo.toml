@@ -1,0 +1,9 @@
+[package]
+name = "emllog"
+version = "0.1.0"
+edition = "2021"
+description = "emllog — journald replacement: tail/verify/grep over a hash-chained .eml spool"
+
+[dependencies]
+emlcore = { path = "../emlcore" }
+serde_json = "1"
