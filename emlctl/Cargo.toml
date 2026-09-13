@@ -1,0 +1,10 @@
+[package]
+name = "emlctl"
+version = "0.1.0"
+edition = "2021"
+description = "emlctl — unified control plane for the eml-linux stack (doctor/status/verify/up)"
+
+[dependencies]
+emlcore = { path = "../emlcore" }
+serde_json = "1"
+libc = "0.2"

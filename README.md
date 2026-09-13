@@ -22,6 +22,9 @@ IPC и конфигурацию. Надстройка — нечёткие кл�
 | **emlsign** | крипто-провенанс | ed25519-подпись `.eml` (headers+body), verify, пиннинг ключа |
 | **emlcron** | планировщик | интервальные `.eml`-задачи; каждый запуск — событие в цепочке |
 | **emlwatch** | inotify-мост | события ФС → поток `.eml` (CREATE/MODIFY/DELETE/...) |
+| **emlsec** | секреты | AES-256-GCM в `.eml`; журнал доступа в цепочке |
+| **emlsnap** | снапшоты | бэкап стора + hashed-манифест; verify/restore |
+| **emlctl** | контроль-план | `doctor` / `status` / `verify` / `up` — единый фронт над стеком |
 
 ## Формат
 
@@ -93,7 +96,7 @@ dinitctl start emlinit
 ## Тесты
 
 ```
-cargo test     # 30 tests: emlcore 10, emlca 5, emlsign 4, emlnet 3, emlwatch 3, emlbus 2, emlcron 2, emlfs 1
+cargo test     # 37 tests: emlcore 10, emlca 5, emlsign 4, emlsec 4, emlnet 3, emlwatch 3, emlbus 2, emlcron 2, emlsnap 2, emlctl 1, emlfs 1
 ```
 Плюс e2e-сценарии: старт/exit-коды/рестарт/graceful shutdown, детект подмены
 тела события (`BROKEN at seq N`), установка/откат пакета, живое FUSE-монтирование.
@@ -148,3 +151,26 @@ $BIN/emlcron run  --jobs jobs/ --spool run/cron
 # наблюдение: inotify -> .eml
 $BIN/emlwatch --dir ./watched --spool run/watch --mask create,modify,delete
 ```
+
+## Секреты, снапшоты, единый фронт
+
+```sh
+# секреты: AES-256-GCM в .eml, журнал доступа — в хеш-цепочке
+$BIN/emlsec init --store vault/
+$BIN/emlsec set  --store vault/ --name db/password --value 'hunter2'
+$BIN/emlsec get  --store vault/ --name db/password
+$BIN/emlsec log  --store vault/
+
+# снапшот: бэкап + hashed-манифест
+$BIN/emlsnap create  --src run/ --out snap/
+$BIN/emlsnap verify  --snap snap/
+$BIN/emlsnap restore --snap snap/ --out restored/
+
+# единый фронт: doctor / status / verify / up
+$BIN/emlctl doctor
+$BIN/emlctl status --root .
+$BIN/emlctl up     --root . --max-runtime 10
+```
+
+`emlctl up` читает раскладку `services/` (→ emlinit), `jobs/` (→ emlcron),
+`watches/` (→ emlwatch) и поднимает весь стек одной командой.
