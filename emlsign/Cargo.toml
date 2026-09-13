@@ -1,0 +1,11 @@
+[package]
+name = "emlsign"
+version = "0.1.0"
+edition = "2021"
+description = "emlsign — ed25519 signing/verification of .eml records (cryptographic provenance)"
+
+[dependencies]
+emlcore = { path = "../emlcore" }
+ed25519-dalek = { version = "2", features = ["rand_core"] }
+rand = "0.8"
+serde_json = "1"

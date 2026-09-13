@@ -1,0 +1,9 @@
+[package]
+name = "emlcron"
+version = "0.1.0"
+edition = "2021"
+description = "emlcron — interval job scheduler where jobs are .eml units and every run is a hash-chained .eml event"
+
+[dependencies]
+emlcore = { path = "../emlcore" }
+serde_json = "1"

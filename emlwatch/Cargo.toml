@@ -1,0 +1,10 @@
+[package]
+name = "emlwatch"
+version = "0.1.0"
+edition = "2021"
+description = "emlwatch — turns inotify filesystem events into a .eml event stream"
+
+[dependencies]
+emlcore = { path = "../emlcore" }
+inotify = "0.11"
+serde_json = "1"

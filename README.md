@@ -19,6 +19,9 @@ IPC и конфигурацию. Надстройка — нечёткие кл�
 | **emlca** | губернатор ресурсов | нечёткий КА (диффузия нагрузки) + VCG/Shapley/Nash; решения — `.eml` |
 | **emlbus** | pub/sub шина | сообщения = `.eml`; доставка по `To:` (entity/topic/`*`), consumed -> `.done` |
 | **emlnet** | CRDT-меш | multi-writer LWW-репликация по TCP; op-id дедуп; сходимость за один обмен |
+| **emlsign** | крипто-провенанс | ed25519-подпись `.eml` (headers+body), verify, пиннинг ключа |
+| **emlcron** | планировщик | интервальные `.eml`-задачи; каждый запуск — событие в цепочке |
+| **emlwatch** | inotify-мост | события ФС → поток `.eml` (CREATE/MODIFY/DELETE/...) |
 
 ## Формат
 
@@ -90,7 +93,7 @@ dinitctl start emlinit
 ## Тесты
 
 ```
-cargo test     # 21 tests: emlcore 10, emlca 5, emlnet 3, emlbus 2, emlfs 1
+cargo test     # 30 tests: emlcore 10, emlca 5, emlsign 4, emlnet 3, emlwatch 3, emlbus 2, emlcron 2, emlfs 1
 ```
 Плюс e2e-сценарии: старт/exit-коды/рестарт/graceful shutdown, детект подмены
 тела события (`BROKEN at seq N`), установка/откат пакета, живое FUSE-монтирование.
@@ -127,4 +130,21 @@ L3  .eml сеть     — CRDT multi-writer sync / TCP   (emlnet)
 L2  .eml шина     — pub/sub, hash-chain лог        (emlbus, emlinit, emllog)
 L1  Linux         — init / пакеты / FUSE-ФС        (emlinit, emlpkg, emlfs)
 L0  формат        — RFC822 + SHA-256 цепочка       (emlcore)
+```
+
+## Провенанс, расписание, наблюдение
+
+```sh
+# ed25519: подписать и проверить любой .eml
+$BIN/emlsign keygen --key node.key
+$BIN/emlsign sign   --key node.key --in msg.eml --out msg.signed.eml
+$BIN/emlsign verify --in msg.signed.eml            # OK
+$BIN/emlsign verify --in msg.signed.eml --pub <HEX> # пиннинг подписанта
+
+# расписание: задачи как .eml, каждый запуск — событие в цепочке
+$BIN/emlcron list --jobs jobs/
+$BIN/emlcron run  --jobs jobs/ --spool run/cron
+
+# наблюдение: inotify -> .eml
+$BIN/emlwatch --dir ./watched --spool run/watch --mask create,modify,delete
 ```

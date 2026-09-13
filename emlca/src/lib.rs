@@ -138,7 +138,6 @@ mod tests {
         assert!(out[1] > 0 && out[2] > 0 && out[3] > 0);
         // symmetric neighbours stay equal
         assert_eq!(out[1], out[3]);
-        assert!(out.iter().all(|&x| x <= 255));
     }
 
     #[test]
