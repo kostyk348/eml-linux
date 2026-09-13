@@ -25,6 +25,8 @@ IPC и конфигурацию. Надстройка — нечёткие кл�
 | **emlsec** | секреты | AES-256-GCM в `.eml`; журнал доступа в цепочке |
 | **emlsnap** | снапшоты | бэкап стора + hashed-манифест; verify/restore |
 | **emlctl** | контроль-план | `doctor` / `status` / `verify` / `up` — единый фронт над стеком |
+| **emlsched** | балансировщик | `/proc/stat` → нечёткий КА → congestion-game VCG; `pin` через `sched_setaffinity` |
+| **emlui** | дашборд | ANSI-панель по всем спулам: события, chain-статус, последние записи |
 
 ## Формат
 
@@ -96,7 +98,7 @@ dinitctl start emlinit
 ## Тесты
 
 ```
-cargo test     # 37 tests: emlcore 10, emlca 5, emlsign 4, emlsec 4, emlnet 3, emlwatch 3, emlbus 2, emlcron 2, emlsnap 2, emlctl 1, emlfs 1
+cargo test     # 42 tests: emlcore 10, emlca 5, emlsign 4, emlsec 4, emlsched 4, emlnet 3, emlwatch 3, emlbus 2, emlcron 2, emlsnap 2, emlctl 1, emlfs 1, emlui 1
 ```
 Плюс e2e-сценарии: старт/exit-коды/рестарт/graceful shutdown, детект подмены
 тела события (`BROKEN at seq N`), установка/откат пакета, живое FUSE-монтирование.
@@ -174,3 +176,17 @@ $BIN/emlctl up     --root . --max-runtime 10
 
 `emlctl up` читает раскладку `services/` (→ emlinit), `jobs/` (→ emlcron),
 `watches/` (→ emlwatch) и поднимает весь стек одной командой.
+
+## Балансировка и дашборд
+
+```sh
+# нагрузка ядер как нечёткое поле, размещение задач через congestion-game VCG
+$BIN/emlsched sample --interval-ms 200
+$BIN/emlsched plan   --loads "255,0,0,40,200,0,0,0" --tasks 4
+$BIN/emlsched daemon --spool run/sched --interval 1
+$BIN/emlsched pin    --pid 1234 --cpu 3
+
+# дашборд по всем спулам (ANSI, без зависимостей)
+$BIN/emlui --root . --once
+$BIN/emlui --root . --interval 2      # живое обновление
+```

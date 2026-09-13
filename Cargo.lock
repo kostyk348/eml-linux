@@ -278,6 +278,16 @@ dependencies = [
 ]
 
 [[package]]
+name = "emlsched"
+version = "0.1.0"
+dependencies = [
+ "emlca",
+ "emlcore",
+ "libc",
+ "serde_json",
+]
+
+[[package]]
 name = "emlsec"
 version = "0.1.0"
 dependencies = [
@@ -305,6 +315,15 @@ dependencies = [
  "serde",
  "serde_json",
  "sha2",
+]
+
+[[package]]
+name = "emlui"
+version = "0.1.0"
+dependencies = [
+ "emlcore",
+ "emlctl",
+ "serde_json",
 ]
 
 [[package]]

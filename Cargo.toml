@@ -1,6 +1,6 @@
 [workspace]
 resolver = "2"
-members = ["emlcore", "emlinit", "emllog", "emlpkg", "emlca", "emlfs", "emlbus", "emlnet", "emlsign", "emlcron", "emlwatch", "emlsec", "emlsnap", "emlctl"]
+members = ["emlcore", "emlinit", "emllog", "emlpkg", "emlca", "emlfs", "emlbus", "emlnet", "emlsign", "emlcron", "emlwatch", "emlsec", "emlsnap", "emlctl", "emlsched", "emlui"]
 
 [profile.release]
 opt-level = 3

@@ -1,0 +1,11 @@
+[package]
+name = "emlsched"
+version = "0.1.0"
+edition = "2021"
+description = "emlsched — load balancer: fuzzy CA diffusion + congestion-game VCG placement, decisions as .eml"
+
+[dependencies]
+emlcore = { path = "../emlcore" }
+emlca = { path = "../emlca" }
+serde_json = "1"
+libc = "0.2"
