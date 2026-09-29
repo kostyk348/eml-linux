@@ -8,3 +8,4 @@ description = "emlui — dependency-free ANSI dashboard for the eml-linux stack"
 emlcore = { path = "../emlcore" }
 emlctl = { path = "../emlctl" }
 serde_json = "1"
+libc = "0.2"

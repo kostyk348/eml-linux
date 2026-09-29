@@ -26,7 +26,7 @@ IPC и конфигурацию. Надстройка — нечёткие кл�
 | **emlsnap** | снапшоты | бэкап стора + hashed-манифест; verify/restore |
 | **emlctl** | контроль-план | `doctor` / `status` / `verify` / `up` — единый фронт над стеком |
 | **emlsched** | балансировщик | `/proc/stat` → нечёткий КА → congestion-game VCG; `pin` через `sched_setaffinity` |
-| **emlui** | дашборд | ANSI-панель по всем спулам: события, chain-статус, последние записи |
+| **emlui** | дашборд | интерактивный TUI (сырой терминал): список спулов, деталь, клавиши q/r/j/k |
 
 ## Формат
 
@@ -190,3 +190,15 @@ $BIN/emlsched pin    --pid 1234 --cpu 3
 $BIN/emlui --root . --once
 $BIN/emlui --root . --interval 2      # живое обновление
 ```
+
+## Один вход — весь стек
+
+```sh
+make release
+make demo ROOT=/tmp/eml-use     # init + up(3s) + status
+make tui  ROOT=/tmp/eml-use     # интерактивный дашборд (q/r/j/k)
+```
+
+`emlctl init` разворачивает рабочую раскладку (`services/ jobs/ watches/ vault/`),
+`emlctl up` поднимает компоненты по наличию каталогов, `emlctl tui` показывает
+живой дашборд.

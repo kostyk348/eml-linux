@@ -182,8 +182,51 @@ fn main() {
                 0
             }
         }
+        "init" => {
+            let dirs = ["services", "jobs", "watches", "vault"];
+            for d in dirs {
+                let _ = std::fs::create_dir_all(root.join(d));
+            }
+            let _ = std::fs::create_dir_all(root.join("run"));
+            let web = root.join("services/web.eml");
+            if !web.exists() {
+                let _ = std::fs::write(
+                    &web,
+                    "From: <web@eml.local>\nTo: <init@eml.local>\nSubject: example web service\nX-EML-Type: Application/Service\nX-Entity-ID: web\nContent-Type: application/json\n\n{\"exec\":[\"/bin/sh\",\"-c\",\"while true; do echo web-tick; sleep 5; done\"],\"restart\":\"always\",\"restart_sec\":1}\n",
+                );
+            }
+            let hb = root.join("jobs/heartbeat.eml");
+            if !hb.exists() {
+                let _ = std::fs::write(
+                    &hb,
+                    "From: <hb@eml.local>\nX-Entity-ID: heartbeat\nContent-Type: application/json\n\n{\"exec\":[\"/bin/echo\",\"beat\"],\"every_sec\":10}\n",
+                );
+            }
+            println!("initialised {}", root.display());
+            println!("  services/  -> emlinit units (.eml)");
+            println!("  jobs/      -> emlcron jobs (.eml)");
+            println!("  watches/   -> emlwatch dirs");
+            println!("  vault/     -> emlsec store");
+            println!("next: emlctl up --root {}   then: emlctl tui --root {}", root.display(), root.display());
+            0
+        }
+        "tui" => {
+            let bin = sibling("emlui");
+            let status = Command::new(&bin)
+                .args(["--root"])
+                .arg(&root)
+                .status();
+            match status {
+                Ok(s) if s.success() => 0,
+                Ok(_) => 1,
+                Err(e) => {
+                    eprintln!("emlctl: tui: {}", e);
+                    1
+                }
+            }
+        }
         _ => {
-            eprintln!("usage: emlctl doctor|status|verify|up [--root DIR] [--max-runtime SECS]");
+            eprintln!("usage: emlctl doctor|init|status|verify|up|tui [--root DIR] [--max-runtime SECS]");
             2
         }
     };
