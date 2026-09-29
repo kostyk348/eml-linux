@@ -98,7 +98,7 @@ dinitctl start emlinit
 ## Тесты
 
 ```
-cargo test     # 42 tests: emlcore 10, emlca 5, emlsign 4, emlsec 4, emlsched 4, emlnet 3, emlwatch 3, emlbus 2, emlcron 2, emlsnap 2, emlctl 1, emlfs 1, emlui 1
+cargo test     # 43 tests: emlcore 10, emlca 5, emlsign 4, emlsec 4, emlsched 4, emlnet 3, emlwatch 3, emlbus 2, emlcron 2, emlsnap 2, emlctl 1, emlfs 1, emlui 2
 ```
 Плюс e2e-сценарии: старт/exit-коды/рестарт/graceful shutdown, детект подмены
 тела события (`BROKEN at seq N`), установка/откат пакета, живое FUSE-монтирование.
@@ -202,3 +202,9 @@ make tui  ROOT=/tmp/eml-use     # интерактивный дашборд (q/r
 `emlctl init` разворачивает рабочую раскладку (`services/ jobs/ watches/ vault/`),
 `emlctl up` поднимает компоненты по наличию каталогов, `emlctl tui` показывает
 живой дашборд.
+
+## MCP-экосистема
+
+Проект зарегистрирован в SINT-слое: epistemic (VERIFIED), liquid (HYPOTHESIS),
+resonance (res:0001), forest (tree 074ea12a), marketplace (signed listing),
+historian (report), spec (RFC 5321 кэширован для будущего `eml-mail`).
