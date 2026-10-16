@@ -1,5 +1,9 @@
 # eml-linux — «всё есть сообщение»
 
+[![Release](https://img.shields.io/github/v/release/kostyk348/eml-linux?sort=semver&color=blue)](https://github.com/kostyk348/eml-linux/releases)
+[![License](https://img.shields.io/badge/license-Apache-2.0-green)](https://github.com/kostyk348/eml-linux/blob/main/LICENSE)
+[![Last commit](https://img.shields.io/github/last-commit/kostyk348/eml-linux?branch=main)](https://github.com/kostyk348/eml-linux/commits/main)
+
 Linux-стек, где атомарный объект — не файл, а **RFC 822 / MIME документ (`.eml`)**.
 Один формат закрывает то, что в Linux размазано по десятку: сервисы, логи, пакеты,
 IPC и конфигурацию. Надстройка — нечёткие клеточные автоматы и теория игр как
@@ -44,26 +48,32 @@ cargo build --release
 BIN=target/release
 
 # 1. init: запустить сервисы из .eml-юнитов
+
 $BIN/emlinit list  --units examples/units
 $BIN/emlinit run   --units examples/units --spool run/emlinit
 
 # 2. управление через .eml-шину (из другого терминала)
+
 $BIN/emlinit send  --bus run/emlinit/control --event STOP
 
 # 3. лог как проверяемая цепочка
+
 $BIN/emllog --spool run/emlinit tail
 $BIN/emllog --spool run/emlinit verify
 
 # 4. пакет = .eml
+
 $BIN/emlpkg build examples/units /tmp/p.eml --id demo --version 1.0.0
 $BIN/emlpkg install /tmp/p.eml --root /tmp/root --log /tmp/pklog
 $BIN/emlpkg rollback --root /tmp/root --log /tmp/pklog
 
 # 5. FUSE
+
 mkdir -p /tmp/mnt && $BIN/emlfs run/emlinit /tmp/mnt &
 ls /tmp/mnt; cat /tmp/mnt/*/headers; fusermount3 -u /tmp/mnt
 
 # 6. КА + теория игр
+
 $BIN/emlca diffuse --cells "255,0,0,0,0,0,0,0" --decay 1 --steps 5
 $BIN/emlca vcg     --bids "10,7,3,2" --slots 2
 $BIN/emlca shapley --players "A,B,C" --v "A=1,B=2,C=0,AB=5,AC=4,BC=3,ABC=9"
@@ -88,6 +98,7 @@ Content-Type: application/json
 
 ```sh
 # запустить emlinit как супервизор под dinit (user-инстанс):
+
 sh deploy/install-user-service.sh
 dinitctl start emlinit
 ```
@@ -115,11 +126,13 @@ cargo test     # 43 tests: emlcore 10, emlca 5, emlsign 4, emlsec 4, emlsched 4,
 
 ```sh
 # pub/sub: сообщения — .eml, доставка по To:
+
 $BIN/emlbus pub  --bus /tmp/bus --from a --to worker --event JOB --body '{"n":1}'
 $BIN/emlbus list --bus /tmp/bus --to worker
 $BIN/emlbus sub  --bus /tmp/bus --to worker --once
 
 # CRDT-меш (UUCP 2.0): два узла сходятся за один обмен
+
 $BIN/emlnet put   --store /tmp/a --writer A --key x --value 1
 $BIN/emlnet serve --store /tmp/a --addr 127.0.0.1:9099 &
 $BIN/emlnet sync  --store /tmp/b --peer 127.0.0.1:9099
@@ -141,16 +154,19 @@ L0  формат        — RFC822 + SHA-256 цепочка       (emlcore)
 
 ```sh
 # ed25519: подписать и проверить любой .eml
+
 $BIN/emlsign keygen --key node.key
 $BIN/emlsign sign   --key node.key --in msg.eml --out msg.signed.eml
 $BIN/emlsign verify --in msg.signed.eml            # OK
 $BIN/emlsign verify --in msg.signed.eml --pub <HEX> # пиннинг подписанта
 
 # расписание: задачи как .eml, каждый запуск — событие в цепочке
+
 $BIN/emlcron list --jobs jobs/
 $BIN/emlcron run  --jobs jobs/ --spool run/cron
 
 # наблюдение: inotify -> .eml
+
 $BIN/emlwatch --dir ./watched --spool run/watch --mask create,modify,delete
 ```
 
@@ -158,17 +174,20 @@ $BIN/emlwatch --dir ./watched --spool run/watch --mask create,modify,delete
 
 ```sh
 # секреты: AES-256-GCM в .eml, журнал доступа — в хеш-цепочке
+
 $BIN/emlsec init --store vault/
 $BIN/emlsec set  --store vault/ --name db/password --value 'hunter2'
 $BIN/emlsec get  --store vault/ --name db/password
 $BIN/emlsec log  --store vault/
 
 # снапшот: бэкап + hashed-манифест
+
 $BIN/emlsnap create  --src run/ --out snap/
 $BIN/emlsnap verify  --snap snap/
 $BIN/emlsnap restore --snap snap/ --out restored/
 
 # единый фронт: doctor / status / verify / up
+
 $BIN/emlctl doctor
 $BIN/emlctl status --root .
 $BIN/emlctl up     --root . --max-runtime 10
@@ -181,12 +200,14 @@ $BIN/emlctl up     --root . --max-runtime 10
 
 ```sh
 # нагрузка ядер как нечёткое поле, размещение задач через congestion-game VCG
+
 $BIN/emlsched sample --interval-ms 200
 $BIN/emlsched plan   --loads "255,0,0,40,200,0,0,0" --tasks 4
 $BIN/emlsched daemon --spool run/sched --interval 1
 $BIN/emlsched pin    --pid 1234 --cpu 3
 
 # дашборд по всем спулам (ANSI, без зависимостей)
+
 $BIN/emlui --root . --once
 $BIN/emlui --root . --interval 2      # живое обновление
 ```
