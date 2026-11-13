@@ -1,8 +1,19 @@
+<div align="center">
+
+<img src="docs/banner.svg" alt="eml-linux banner" width="1000">
+
 # eml-linux — «всё есть сообщение»
+
+### EML-native Linux stack: everything is a message. .eml as universal OS object (init, log, packages, IPC, FUSE) + fuzzy cellular automata and game theory as resource governor.
 
 [![Release](https://img.shields.io/github/v/release/kostyk348/eml-linux?sort=semver&color=blue)](https://github.com/kostyk348/eml-linux/releases)
 [![License](https://img.shields.io/badge/license-Apache-2.0-green)](https://github.com/kostyk348/eml-linux/blob/main/LICENSE)
 [![Last commit](https://img.shields.io/github/last-commit/kostyk348/eml-linux?branch=main)](https://github.com/kostyk348/eml-linux/commits/main)
+
+</div>
+
+---
+
 
 Linux-стек, где атомарный объект — не файл, а **RFC 822 / MIME документ (`.eml`)**.
 Один формат закрывает то, что в Linux размазано по десятку: сервисы, логи, пакеты,
